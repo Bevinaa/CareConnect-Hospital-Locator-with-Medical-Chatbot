@@ -12,3 +12,9 @@ Users can search for hospitals based on their state and district, even if they a
 24/7 AI Chatbot:
 The website features an AI-powered chatbot that provides instant answers to medical queries and offers guidance on accessing 
 healthcare.
+
+Front-End Technologies:
+HTML, CSS, Javascript
+
+Programming Language and Web Framework:
+Python and Flask
