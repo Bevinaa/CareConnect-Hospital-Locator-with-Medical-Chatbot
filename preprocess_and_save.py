@@ -28,7 +28,7 @@ def preprocess(input_file, output_file):
     df_preprocessed.to_csv(output_file, index=False)
     print(f"Preprocessed data saved to {output_file}")
 
-input_file= r"C:\Users\Bevina R\OneDrive\Desktop\chatbot\test2\ai_medical_chatbot_dataset.csv" 
+input_file= r"C:\Users\username\OneDrive\Desktop\chatbot\test2\ai_medical_chatbot_dataset.csv" 
 preprocessed_csv_path = 'preprocessed_ai_medical_chatbot_dataset.csv'
 
 preprocess(input_file, preprocessed_csv_path)
