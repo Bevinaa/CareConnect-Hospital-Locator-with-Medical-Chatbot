@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Data</title>
+</head>
+<body>
+    <h1>Data from CSV and MySQL</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Hospital</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Local Address</th>
+            <th>Pincode</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row[0] }}</td> <!-- ID -->
+            <td>{{ row[1] }}</td> <!-- Hospital -->
+            <td>{{ row[2] }}</td> <!-- State -->
+            <td>{{ row[3] }}</td> <!-- City -->
+            <td>{{ row[4] }}</td> <!-- Local Address -->
+            <td>{{ row[5] }}</td> <!-- Pincode -->
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

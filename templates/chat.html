@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareConnect | Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("{{ url_for('static', filename='assests/bg2.webp') }}");
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+        }
+
+        .chat-container {
+            width: 80%;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80%;
+        }
+
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-end;
+            animation: fadeIn 0.5s ease;
+            opacity: 0;
+            animation-fill-mode: forwards;
+            animation-delay: 0.1s;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .chat-message.bot {
+            justify-content: flex-start;
+        }
+
+        .chat-message .message {
+            padding: 10px;
+            border-radius: 15px;
+            max-width: 60%;
+            word-wrap: break-word;
+            animation: slideIn 0.5s ease;
+            position: relative;
+        }
+
+        .chat-message.user .message {
+            background: linear-gradient(135deg, #93afd6, #b9c2f6);
+            margin-left: auto;
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-message.bot .message {
+            background: linear-gradient(135deg, #9ab7f4, #6b89db);
+            margin-right: auto;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .message::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .chat-message.user .message::before {
+            border-width: 0 0 10px 10px;
+            border-color: transparent transparent #9ab7f4 transparent;
+            top: 0;
+            right: -10px;
+        }
+
+        .chat-message.bot .message::before {
+            border-width: 10px 10px 0 0;
+            border-color: #d4d4d4 transparent transparent transparent;
+            top: 0;
+            left: -10px;
+        }
+
+        .message-input {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            background: #f8f8f8;
+        }
+
+        .message-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-input button {
+            padding: 10px 20px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+        align-items: center;
+        background-color: #0A66C2;
+        border: 0;
+        border-radius: 100px;
+        box-sizing: border-box;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        font-family: -apple-system, system-ui, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        justify-content: center;
+        line-height: 20px;
+        max-width: 480px;
+        min-height: 40px;
+        min-width: 0px;
+        overflow: hidden;
+        padding: 0px;
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: center;
+        touch-action: manipulation;
+        transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+        user-select: none;
+        -webkit-user-select: none;
+        vertical-align: middle;
+        }
+
+        .button:hover,
+        .button:focus { 
+        background-color: #16437E;
+        color: #ffffff;
+        }
+
+        .button:active {
+        background: #09223b;
+        color: rgb(255, 255, 255, .7);
+        }
+
+        .button:disabled { 
+        cursor: not-allowed;
+        background: rgba(0, 0, 0, .08);
+        color: rgba(0, 0, 0, .3);
+        }
+        .message-input button:hover {
+            background: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); }
+            to { transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            {% for message in messages %}
+                <div class="chat-message {{ message.type }}">
+                    <div class="message">
+                        {{ message.text }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <form id="chat-form" class="message-input">
+            <input type="text" id="user_input" name="user_input" placeholder="Ask your queries here..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user_input');
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                appendMessage('user', userMessage);
+                userInput.value = '';
+
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ user_input: userMessage })
+                });
+                const data = await response.json();
+
+                if (data.response) {
+                    appendMessage('bot', data.response);
+                }
+            }
+        });
+
+        function appendMessage(type, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', type);
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('message');
+            messageContent.textContent = text;
+            messageDiv.appendChild(messageContent);
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>

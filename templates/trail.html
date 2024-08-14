@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identify Establishments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .upload-container {
+            margin-bottom: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Identify Establishments from Images</h1>
+    <div class="upload-container">
+        <input type="file" id="imageInput" accept="image/*">
+        <button onclick="uploadImage()">Upload and Identify</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        async function uploadImage() {
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select an image.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Replace with your backend endpoint
+            const response = await fetch('/identify-image', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerHTML = `
+                <h2>Identification Result:</h2>
+                <p>${result.description}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

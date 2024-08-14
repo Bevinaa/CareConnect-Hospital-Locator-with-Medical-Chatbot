@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareConnect | Nearest Government Hospitals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #12ac8e;
+            --primary-color-light: #ecf0f1;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        .nav__logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .section__container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .form__container {
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        #location {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .pharmacy__list {
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .pharmacy__list h4 {
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .pharmacy__list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pharmacy__list li {
+            margin-bottom: 1rem;
+        }
+
+        #detect_button, .state-district-form button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        #detect_button:hover, .state-district-form button:hover {
+            background-color: darkgreen;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1.9rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .state-district-form {
+            display: none;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .state-district-form.show {
+            display: block;
+        }
+
+        .find-pharmacies-heading {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .pharmacy-container {
+            border: 1px solid #ddd;
+            padding: 30px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            margin-bottom: 30px;
+        }
+
+        .pharmacy-header {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pharmacy-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pharmacy-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .pharmacy-details {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .pharmacy-details span {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .pharmacy-details i {
+            margin-right: 15px;
+        }
+
+        .pharmacy-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .pharmacy-actions a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            margin-right: 15px;
+            margin-bottom: 15px;
+            background-color: #4CAF50;
+        }
+
+        .pharmacy-actions .call {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+        }
+
+        .pharmacy-actions i {
+            margin-right: 10px;
+        }
+    </style>
+<script>
+    const openCageApiKey = 'e8b7187e67314da6807f41b07b566742';
+    const reverseGeocodeUrl = 'https://api.opencagedata.com/geocode/v1/json';
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    const openCageUrl = `${reverseGeocodeUrl}?q=${lat}+${lon}&key=${openCageApiKey}`;
+
+    fetch(openCageUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.results.length > 0) {
+                const addressComponents = data.results[0].components;
+                const district = addressComponents.state_district || addressComponents.county || addressComponents.state;
+
+                // Remove any "unnamed" parts from the formatted address
+                const formattedAddress = data.results[0].formatted.split(", ")
+                    .filter(part => !part.toLowerCase().includes("unnamed"))
+                    .join(", ");
+
+                document.getElementById("location").innerHTML = `Your location: ${formattedAddress}<br>District: ${district}`;
+
+                fetchHospitalsInDistrict(district);
+            } else {
+                document.getElementById("location").innerHTML = "Location not found.";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching location:", error);
+            document.getElementById("location").innerHTML = "Error fetching location.";
+        });
+}
+
+
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                document.getElementById("location").innerHTML = "User denied the request for Geolocation.";
+                break;
+            case error.POSITION_UNAVAILABLE:
+                document.getElementById("location").innerHTML = "Location information is unavailable.";
+                break;
+            case error.TIMEOUT:
+                document.getElementById("location").innerHTML = "The request to get user location timed out.";
+                break;
+            case error.UNKNOWN_ERROR:
+                document.getElementById("location").innerHTML = "An unknown error occurred.";
+                break;
+        }
+    }
+
+    function fetchHospitalsInDistrict(district) {
+    const overpassApiUrl = `https://overpass-api.de/api/interpreter?data=[out:json];area[name="${district}"];node(area)[amenity=hospital];out;`;
+
+    fetch(overpassApiUrl)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Overpass API Response:', data);  
+            const hospitalList = document.getElementById("pharmacy_list");
+            hospitalList.innerHTML = "";
+
+            if (data.elements && data.elements.length > 0) {
+                data.elements.forEach(hospital => {
+                    if (hospital.tags && hospital.tags.name) {
+                        const hospitalName = hospital.tags.name.toLowerCase();
+                        if (hospitalName.includes("gov") || hospitalName.includes("government")) {
+                            const lat = hospital.lat;
+                            const lon = hospital.lon;
+
+                            const openCageUrl = `${reverseGeocodeUrl}?q=${lat}+${lon}&key=${openCageApiKey}`;
+
+                            fetch(openCageUrl)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const address = data.results.length > 0 ? data.results[0].formatted : "Address not available";
+
+                                    const listItem = document.createElement("li");
+                                    listItem.className = "pharmacy-container";
+                                    
+                                    listItem.innerHTML = `
+                                        <div class="pharmacy-header">
+                                            <div class="pharmacy-info">
+                                                <div class="pharmacy-name">${hospital.tags.name}</div>
+                                                <div class="pharmacy-details">
+                                                    <span><i class="fas fa-map-marker-alt"></i>${address}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="pharmacy-actions">
+                                             <a href="https://www.google.com/search?q=${encodeURIComponent(hospital.tags.name)}" target="_blank" class="call"><i class="fa-brands fa-google fa-lg"></i>Search</a>
+                                            <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}" target="_blank" class="get-directions">
+                                                <i class="fas fa-directions"></i> Get Directions
+                                            </a>
+                                        </div>
+                                    `;
+
+                                    hospitalList.appendChild(listItem);
+                                })
+                                .catch(error => {
+                                    console.error("Error fetching address:", error);
+                                });
+                        }
+                    }
+                });
+            } else {
+                hospitalList.innerHTML = "<h4>No government hospitals found in this district.</h4>";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching hospitals:", error);
+            document.getElementById("pharmacy_list").innerHTML = "Error fetching hospitals.";
+        });
+}
+
+
+</script>
+</head>
+<body>
+    <header>
+        <div class="nav__logo"> Hospital Locator </div>
+    </header>
+    <section class="section__container">
+        <div class="form__container">
+            <center><button id="detect_button" onclick="getLocation()">Detect Nearest Hospitals</button></center>
+            <div id="location" style="margin-top: 2rem; font-size: 1.2rem; color: var(--text-dark); text-align: center;"></div>
+            <div class="pharmacy__list">
+                <h4>Government Hospitals Near You</h4>
+                <ul id="pharmacy_list"></ul>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
