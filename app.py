@@ -16,19 +16,19 @@ app = Flask(__name__)
 app.secret_key = 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6'
 
 # OpenCage API Key
-API_KEY = 'e8b7187e67314da6807f41b07b566742'
+API_KEY = 'e8b7187e67314da6807f41b07b566742' #generate your opencage key
 
 # Database connection
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        passwd="system",
+        passwd="password", #Use your password
         database="testdb"
     )
 
 def initialize_database():
-    csv_file_path = r'C:\Users\Bevina R\OneDrive\Desktop\hospital\HospitalsInIndia.csv'
+    csv_file_path = r'C:\Users\username\OneDrive\Desktop\hospital\HospitalsInIndia.csv' #Use your file path
     
     data = pd.read_csv(csv_file_path, index_col=0)
 
