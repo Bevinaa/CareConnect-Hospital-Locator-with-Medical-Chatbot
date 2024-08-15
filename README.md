@@ -1,4 +1,3 @@
-
 # CARECONNECT
 
 **CARECONNECT** is a comprehensive medical assistance application designed to offer users 24/7 support through an intelligent chatbot. The app helps users find hospitals, pharmacies, government hospitals, and multi-speciality hospitals, and provides their locations on maps. 
@@ -7,11 +6,11 @@
 
 - **24/7 Chatbot Assistance:** Engage with a chatbot that provides medical assistance and answers user queries.
 - **Hospital Finder:** Search for hospitals based on type (e.g., government, multi-speciality) and view their locations on a map.
-- **Appointment Scheduling:** Book appointments and receive confirmation details.
 - **Location Detection:** Identify and save districts based on user-provided addresses.
 
 ## Technologies Used
 
+- **Python:** Programming Language for building the application.
 - **Flask:** Web framework for building the application.
 - **MySQL:** Database for storing hospital data.
 - **Pandas:** Data manipulation and analysis.
@@ -23,7 +22,7 @@
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/careconnect.git
+    git clone https://github.com/Bevinaa/CareConnect-Hospital-Locator-with-Medical-Chatbot.git
     ```
 
 2. **Navigate to the project directory:**
@@ -110,9 +109,6 @@ We welcome contributions to enhance the CARECONNECT project. If you would like t
 
 5. **Open a pull request on GitHub.**
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
@@ -123,11 +119,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions or further information, please contact:
 
-- **Name:** Your Name
-- **Email:** your.email@example.com
-- **GitHub:** [yourusername](https://github.com/yourusername)
+- **Name:** Bevina
+- **Email:** bevina2110@gmail.com
+- **GitHub:** [yourusername](https://github.com/Bevinaa)
 
-Implementation:
+## Implementation
+
 ![homepage](https://github.com/user-attachments/assets/1c5b262d-3289-4cd6-8529-925d4ddde901)
 ![homepage2](https://github.com/user-attachments/assets/76550882-fec3-4227-a236-7fae04ef9d53)
 ![homepage3](https://github.com/user-attachments/assets/588921b4-55b3-4762-8b0d-bf658e2b767e)
